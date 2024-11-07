@@ -1,4 +1,4 @@
-import urlShortener from "../utils/urlShortener";
+import urlShortener from "../utils/urlShortener.js";
 import express from "express";
 const router = express.Router();
 
@@ -15,4 +15,8 @@ export default router.post("/shorten",async (req,res) => {
         res.sendStatus(500).json("error generating shorten url");
     }
 })
+
+router.get("/shorten", (req, res) => {
+    res.send("Shorten URL endpoint - use POST method");
+  });
 
