@@ -11,8 +11,7 @@ async function saveInRedis(slug, parent_url) {
     return store;
 }
 
-async function getValueFromRedis() {
-    const slug = "2kUCe";
+async function getValueFromRedis(slug) {
     const value = await client.hGet("linklite_hash", slug); // Corrected to use hGet
     console.log("valueueuueueueeu -- ", value)
     return value;
@@ -38,10 +37,12 @@ gpu_router.post("/shorten",async (req,res) => {
     }
 })
 
-gpu_router.get("/shorten", async (req, res) => {
+// This is for a particular url
+gpu_router.get("/shorten/:slug", async (req, res) => {
+    const slug = req.params.slug;
     try {
-        
-        const val = await getValueFromRedis();
+    
+        const val = await getValueFromRedis(slug);
         if (val) {
             console.log("get", val);
             res.status(200).json({ originalUrl: val });
@@ -54,5 +55,11 @@ gpu_router.get("/shorten", async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+// get all lists
+gpu_router.get("/get_redisSlugs", async (req,res)=>{
+    const list = await client.hGetAll("linklite_hash");
+    res.status(200).json(list);
+})
 
 export default gpu_router;
