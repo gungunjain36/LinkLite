@@ -14,7 +14,7 @@ app.get("/",(req,res) => {
 })
 
 
-app.use("/gungun", gpu_router);
+app.use("/", gpu_router);
 // app.use("/shoten",shortURL);
 
   
