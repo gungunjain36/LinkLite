@@ -1,4 +1,9 @@
-// import Redis from "ioredis";
+import { createClient } from 'redis';
 
-// export const redis = new Redis();
+const client = createClient({ legacyMode: true });
 
+client.on('error', err => console.log('Redis Client Error', err));
+
+await client.connect();
+
+export default client;

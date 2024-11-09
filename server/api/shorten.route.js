@@ -1,13 +1,25 @@
 import urlShortener from "../utils/urlShortener.js";
 import express from "express";
-const router = express.Router();
+import client from "../utils/redis-client.js"
+const gpu_router = express.Router();
+
+let shortenedURL = ""
 
 
-export default router.post("/shorten",async (req,res) => {
+gpu_router.post("/shorten",async (req,res) => {
+    let url = req.body.url;
+    let len = req.body.len;
+
     try{
-        const originalURL = req.body.url;
-        const len = req.body.len;
-        const shortURL = await urlShortener(len);
+        console.log(req.body)
+        let shortURL = await urlShortener(len);
+        await client.hSet('linklite_hash' ,"" ,"");
+        let check = await client.hGet("linklite_hash",shortURL);
+        while(shortURL!== check){
+            shortURL = urlShortener(len);
+        }
+        await client.hSet('linklite_hash',shortURL,url);
+        shortenedURL = shortURL
         res.status(200).json({ shortURL });
 
     }catch(error){
@@ -16,7 +28,8 @@ export default router.post("/shorten",async (req,res) => {
     }
 })
 
-router.get("/shorten", (req, res) => {
-    res.send("Shorten URL endpoint - use POST method");
-  });
+gpu_router.get("/", (req, res) => {
+    res.send(shortenedURL);
+});
 
+export default gpu_router;
