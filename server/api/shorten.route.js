@@ -7,13 +7,13 @@ let shortenedURL = ""
 
 async function saveInRedis(slug, parent_url) {
     const store = await client.hSet('linklite_hash', slug, parent_url);
-    console.log("Stored in Redis - ", store)
+    // console.log("Stored in Redis - ", store)
     return store;
 }
 
 async function getValueFromRedis(slug) {
     const value = await client.hGet("linklite_hash", slug); // Corrected to use hGet
-    console.log("valueueuueueueeu -- ", value)
+    // console.log("valueueuueueueeu -- ", value)
     return value;
 }
 
