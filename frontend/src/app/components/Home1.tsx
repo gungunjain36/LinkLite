@@ -1,10 +1,28 @@
 "use client"
+import axios from "axios";
 import Button from "./Button";
 import React from "react";
 
 export default function Home1(){
+
+    
     const [url, seturl] = React.useState("");
     const [len, setlen] = React.useState(0);
+
+    function handler() {
+        console.log(url);
+        axios.post("http://localhost:3000/shorten", {
+            url: url,
+            len: len,
+        })
+        
+        .then(response => {
+            console.log("URL shortened:", response.data);
+        })
+        .catch(error => {
+            console.error("Error shortening URL:", error);
+        });
+    }
 
     function handleInputUrl(event: any){
         seturl(event.target.value);
@@ -26,7 +44,7 @@ export default function Home1(){
                         <label className="block mb-2 text-sm text-black font-semibold pt-4">len</label>
                         <input onChange={handleInputLen} id="len" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="6" required />
                     </div>
-                    <Button />
+                    <Button onClick = {handler} />
                 </div>
             </a>
         </div>
