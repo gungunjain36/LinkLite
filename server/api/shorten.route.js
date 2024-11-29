@@ -6,6 +6,7 @@ const gpu_router = express.Router();
 let shortenedURL = ""
 
 async function saveInRedis(slug, parent_url) {
+    // console.log(slug, parent_url)
     const store = await client.hSet('linklite_hash', slug, parent_url);
     // console.log("Stored in Redis - ", store)
     return store;
@@ -19,16 +20,17 @@ async function getValueFromRedis(slug) {
 
 
 gpu_router.post("/shorten",async (req,res) => {
+    // console.log("ha req aai hai!")
     let url = req.body.url;
     let len = req.body.len;
+    // console.log("seoish", url, len)
+    // console.log("yaha aai?")
 
     try{
-        let slug;
-        do {
-            slug = await urlShortener(len);
-        } while (await client.hGet("linklite_hash", slug)); // Regenerate if slug exists
-
-        await saveInRedis(slug, url);
+        // console.log("abe yaha?")
+        const slug = await urlShortener(len)
+        const store = await saveInRedis(slug, url)
+        console.log("bruh", store)
         res.status(200).json({ slug });
 
     }catch(error){
