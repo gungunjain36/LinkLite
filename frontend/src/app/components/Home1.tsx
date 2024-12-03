@@ -4,7 +4,7 @@ import Button from "./Button";
 import React, { useEffect } from "react";
 
 
-export default async function Home1(){
+export default function Home1(): any{
     const [url, setURL] = React.useState("");
     const [len, setLen] = React.useState(0);
 
